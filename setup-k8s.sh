@@ -93,7 +93,19 @@ echo "🚀 Creating Sienna service account in '$NAMESPACE' namespace..."
 # Create namespace if it doesn't exist (except for default)
 if [ "$NAMESPACE" != "default" ]; then
     echo "📦 Ensuring namespace '$NAMESPACE' exists..."
-    kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
+    if ! kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f - 2>/tmp/namespace_error.log; then
+        echo "❌ Failed to create namespace '$NAMESPACE'. Error details:"
+        cat /tmp/namespace_error.log
+        echo
+        echo "💡 This usually means:"
+        echo "   - You don't have permission to create namespaces"
+        echo "   - The namespace might already exist (this is usually fine)"
+        echo "   - Ask your cluster admin to create the namespace for you"
+        echo
+        echo "🔄 You can try using the 'default' namespace instead (option 2)"
+        rm -f /tmp/namespace_error.log
+        exit 1
+    fi
     echo "✅ Namespace ready"
 fi
 
