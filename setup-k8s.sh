@@ -175,7 +175,7 @@ echo
 # Use more robust jsonpath queries that work with the current context
 CLUSTER_NAME=$(kubectl config view --minify -o jsonpath='{.contexts[0].context.cluster}')
 API_SERVER=$(kubectl config view --minify -o jsonpath='{.clusters[?(@.name=="'$CLUSTER_NAME'")].cluster.server}')
-CA_DATA=$(kubectl config view --minify -o jsonpath='{.clusters[?(@.name=="'$CLUSTER_NAME'")].cluster.certificate-authority-data}')
+CA_DATA=$(kubectl config view --minify --raw -o jsonpath='{.clusters[?(@.name=="'$CLUSTER_NAME'")].cluster.certificate-authority-data}')
 
 if [ -z "$API_SERVER" ]; then
     echo "❌ Could not extract API server URL from kubeconfig"
