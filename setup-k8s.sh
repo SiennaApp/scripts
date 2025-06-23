@@ -18,14 +18,14 @@ echo "📍 Current kubectl context: $CURRENT_CONTEXT"
 echo
 
 # Ask if they want to use current context or choose a different one
-read -p "Use this context? (y/n): " -n 1 -r
+read -p "Use this context? (y/n): " -n 1 -r < /dev/tty
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     echo
     echo "Available contexts:"
     kubectl config get-contexts -o name
     echo
-    read -p "Enter the context name you want to use: " SELECTED_CONTEXT
+    read -p "Enter the context name you want to use: " SELECTED_CONTEXT < /dev/tty
     
     if ! kubectl config get-contexts -o name | grep -q "^$SELECTED_CONTEXT$"; then
         echo "❌ Context '$SELECTED_CONTEXT' not found."
@@ -43,7 +43,7 @@ echo "1. Use 'sienna' namespace (recommended - will be created if it doesn't exi
 echo "2. Use 'default' namespace"
 echo "3. Enter custom namespace"
 echo
-read -p "Select option (1-3) [1]: " -n 1 -r NAMESPACE_CHOICE
+read -p "Select option (1-3) [1]: " -n 1 -r NAMESPACE_CHOICE < /dev/tty
 echo
 echo
 
@@ -63,7 +63,7 @@ case $NAMESPACE_CHOICE in
         ;;
     3)
         echo
-        read -p "Enter namespace name: " NAMESPACE
+        read -p "Enter namespace name: " NAMESPACE < /dev/tty
         if [ -z "$NAMESPACE" ]; then
             echo "❌ Namespace cannot be empty"
             exit 1
